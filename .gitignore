@@ -1,4 +1,6 @@
+#Rigth now there are binaries on docs, maybe on the future
+#this can be updated to track some docs
 docs/
+#Exlude binary files from the repo
 kernel*
-
 *.o
