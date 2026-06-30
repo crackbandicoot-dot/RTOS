@@ -1,0 +1,2 @@
+sudo apt update
+sudo apt install gcc-arm-none-eabi qemu-system-arm gdb-multiarch

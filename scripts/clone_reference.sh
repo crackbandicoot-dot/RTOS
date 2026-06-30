@@ -1,0 +1,1 @@
+git clone --recurse-submodules https://github.com/Introduction-To-System-On-Chip/QEMU_lm3s6965evb.git
