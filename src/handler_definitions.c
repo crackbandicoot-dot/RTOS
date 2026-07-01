@@ -10,3 +10,10 @@ void SVC_Handler(void)
   logPrint("SVC Call, switching to Priviledge\n");
   __set_CONTROL(__get_CONTROL() & ~CONTROL_nPRIV_Msk);
 }
+
+void PendSV_Handler(void){
+  logPrint("I don't know what is this call XD PendSV_Handler..");
+}
+void SysTick_Handler(void){ 
+  logPrint("TIMER");
+}

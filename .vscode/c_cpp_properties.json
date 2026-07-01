@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "ARM Cortex-M3",
+            "compilerPath": "arm-none-eabi-gcc",
+            "intelliSenseMode": "linux-gcc-arm",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/CMSIS_5/Device/ARM/ARMCM3/Include",
+                "${workspaceFolder}/CMSIS_5/CMSIS/Core/Include",
+                "${workspaceFolder}"
+            ],
+            "defines": [
+                "ARMCM3",
+                "__CORTEX_M3",
+                "__CMSIS_RTOS"
+            ],
+            "cStandard": "c11",
+            "cppStandard": "c++17"
+        }
+    ],
+    "version": 4
+}

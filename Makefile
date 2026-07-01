@@ -6,10 +6,9 @@ MACHINE := lm3s6965evb
 
 CMSIS ?= ./CMSIS_5
 # Use QEMU_PATH= if QEMU was installed through the apt-get command.
-QEMU_PATH ?= ./qemu/arm-softmmu/
-TOOLCHAIN ?= ./gcc-arm-none-eabi-9-2019-q4-major/bin/
+#QEMU_PATH ?= ./qemu/arm-softmmu/
 
-QEMU_COMMAND := $(QEMU_PATH)qemu-system-arm
+QEMU_COMMAND := qemu-system-arm
 
 # Add this in the QEMU_RUN_COMMAND to see all the exceptions taken
 ## -d int,cpu_reset
@@ -36,8 +35,8 @@ LINKER_SCRIPT = gcc_arm.ld
 SRC_ASM = $(CMSIS)/Device/ARM/ARMCM3/Source/GCC/startup_ARMCM3.S
 
 SRC_C = $(CMSIS)/Device/ARM/ARMCM3/Source/system_ARMCM3.c \
-        start.c \
-        uart.c
+        src/start.c \
+        src/uart.c
 
 ## CMSIS RTX RTOS specific
 RTX_OS_CMSIS_SRC = $(wildcard $(CMSIS)/CMSIS/RTOS/RTX/SRC/*.c) \
@@ -63,8 +62,8 @@ RTX2_INCLUDE_FLAGS = \
   -I$(CMSIS)/CMSIS/RTOS2/RTX/Config
 
 ## Exercise source files
-3_8_1_SRC = $(wildcard chapt3_8/Ex1/*.c)
-3_8_1_SRC_ASM = chapt3_8/Ex1/startup_ARMCM3.S
+3_8_1_SRC = $(wildcard src/*.c)
+3_8_1_SRC_ASM = $(CMSIS)/Device/ARM/ARMCM3/Source/GCC/startup_ARMCM3.S
 3_8_2_SRC = $(wildcard chapt3_8/Ex2/*.c)
 3_8_2_RTX2_SRC = $(wildcard chapt3_8/Ex2_rtx2/main.c)
 
