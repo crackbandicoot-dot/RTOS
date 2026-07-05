@@ -1,0 +1,39 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "build",
+            "type": "shell",
+            "command": "make",
+            // adjust if you need a specific target, e.g. "make 3_8_1"
+            "args": [],
+            "group": "build",
+            "problemMatcher": ["$gcc"],
+            "detail": "Compile the Cortex-M3 project."
+        },
+        {
+            "label": "run-qemu-gdbserver",
+            "type": "shell",
+            "command": "make",
+            "args": ["gdbserver"],
+            "isBackground": true,
+            // problemMatcher looks for the line QEMU prints when the gdb server is ready
+            "problemMatcher": {
+                "owner": "cpp",
+                "pattern": {
+                    "regexp": "^QEMU waiting for connection",
+                    "file": 0,
+                    "location": 0,
+                    "message": 0
+                },
+                "background": {
+                    "activeOnStart": true,
+                    "beginsPattern": ".",
+                    "endsPattern": "^QEMU waiting for connection"
+                }
+            },
+            "dependsOn": ["build"],
+            "detail": "Start QEMU with gdbserver (port 1234) and wait for GDB."
+        }
+    ]
+}

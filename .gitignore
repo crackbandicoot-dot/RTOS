@@ -9,3 +9,9 @@ CMSIS_5/
 #Exclude build garbage
 3_8_1_objdump.txt
 kernel.map
+.gdb_history
+03-models-4.pdf
+DEBUGCONGIG.txt
+README.md
+qemu_exceptions.log
+rams.pdf

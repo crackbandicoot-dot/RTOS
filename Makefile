@@ -27,7 +27,8 @@ BINARY_OBJDUMP := objdump.txt
 
 CROSS_COMPILE = $(TOOLCHAIN)arm-none-eabi-
 CC = $(CROSS_COMPILE)gcc
-GDB = $(CROSS_COMPILE)gdb
+# Use gdb-multiarch if no toolchain-specific GDB is set
+GDB ?= gdb-multiarch
 OBJ = $(CROSS_COMPILE)objdump
 
 LINKER_SCRIPT = gcc_arm.ld
@@ -132,13 +133,13 @@ run: $(BINARY)
 	echo $? " has exited"
 
 gdbserver: $(BINARY)
-	$(QEMU_RUN_COMMAND) -S -s
+	$(QEMU_RUN_COMMAND) -S -s -d int,cpu_reset,guest_errors -D qemu_exceptions.log
 
 help:
 	$(QEMU_COMMAND) --machine help
 
 gdb: $(BINARY)
-	$(GDB) $(BINARY) -ex "target remote:1234"
+	$(GDB) $(BINARY) -ex "target remote:1234" -nh -x ~/.gdbinit 
 
 clean:
 	rm -f $(BINARY_OBJDUMP) *.o *.elf 

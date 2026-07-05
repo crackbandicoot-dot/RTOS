@@ -1,0 +1,33 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "showDisplayString": true,
+            "registers": true,
+            "name": "Cortex-M3 QEMU Debug",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/cm3.elf",
+            "cwd": "${workspaceFolder}",
+            "miDebuggerPath": "/usr/bin/gdb-multiarch",
+            // if you use the toolchain's gdb, change to "arm-none-eabi-gdb"
+            "miDebuggerServerAddress": "localhost:1234",
+            "stopAtEntry": true,
+            "targetArchitecture": "arm",
+            "preLaunchTask": "run-qemu-gdbserver",
+            "postDebugTask": "",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "externalConsole": false,
+            "logging": {
+                "engineLogging": false
+            }
+        }
+    ]
+}
