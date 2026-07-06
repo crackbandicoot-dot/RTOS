@@ -4,6 +4,7 @@
         {
             "showDisplayString": true,
             "registers": true,
+            "stack":true,
             "name": "Cortex-M3 QEMU Debug",
             "type": "cppdbg",
             "request": "launch",

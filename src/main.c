@@ -46,6 +46,7 @@ void ref_main(){
 int main(void)
 {
   osKernelInitialize();
+  
   while(1){
     printString("Hello world");
   }
