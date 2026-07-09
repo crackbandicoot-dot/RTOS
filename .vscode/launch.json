@@ -4,14 +4,12 @@
         {
             "showDisplayString": true,
             "registers": true,
-            "stack":true,
             "name": "Cortex-M3 QEMU Debug",
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/cm3.elf",
             "cwd": "${workspaceFolder}",
             "miDebuggerPath": "/usr/bin/gdb-multiarch",
-            // if you use the toolchain's gdb, change to "arm-none-eabi-gdb"
             "miDebuggerServerAddress": "localhost:1234",
             "stopAtEntry": true,
             "targetArchitecture": "arm",
@@ -23,6 +21,34 @@
                     "description": "Enable pretty-printing for gdb",
                     "text": "-enable-pretty-printing",
                     "ignoreFailures": true
+                },
+                {
+                    "description": "Disable pagination (no --More-- prompts)",
+                    "text": "set pagination off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Disable confirmation prompts",
+                    "text": "set confirm off",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Pretty print structures",
+                    "text": "set print pretty on",
+                    "ignoreFailures": true
+                }
+            ],
+            //  Add this section to create persistent Memory Views for typical Cortex‑M3 RAM regions
+            "memory": [
+                {
+                    "address": "0x20000000",        // start of SRAM (adjust to your chip)
+                    "length": 65536,                // 64 KB – change to match your SRAM size
+                    "name": "SRAM"
+                },
+                {
+                    "address": "0x1FFFF000",        // example: peripheral region
+                    "length": 4096,
+                    "name": "Peripherals"
                 }
             ],
             "externalConsole": false,

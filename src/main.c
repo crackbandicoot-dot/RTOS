@@ -1,5 +1,5 @@
 #include "start.h"
-
+#include "queue.h"
 /* #include <ARMCM3.h> */
 #include "cmsis_os.h"
 #include <stdlib.h>
@@ -43,13 +43,29 @@ void ref_main(){
   //accessRegionsMPU();
   
 } */
+
 int main(void)
 {
-  osKernelInitialize();
-  
-  while(1){
-    printString("Hello world");
+  /*osKernelInitialize();
+  osKernelStart();
+  printString("Hello world");*/
+  Queue Q;
+  uint32_t length =8;
+  uint32_t A[length];
+  initialize_queue(&Q,A,length);
+  for (size_t i = 0; i < 8; i++)
+  {
+    enqeue(&Q,i+1);  
   }
+  for (size_t i = 0; i < 8; i++)
+  {
+    uint32_t x= deqeue(&Q);
+  }
+  enqeue(&Q,15);
+  enqeue(&Q,16);
+  uint32_t y = deqeue(&Q);
+  uint32_t z = deqeue(&Q);
+  
   return 0;
 }
 

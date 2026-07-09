@@ -1,7 +1,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <stdio.h>
-
+#include "cmsis_os.h"
+#include <ARMCM3.h>
 extern int main(void);
 
 /* Static functions and constant data */
