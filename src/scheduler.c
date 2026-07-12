@@ -1,5 +1,5 @@
 #include "cmsis_os.h"
-#include "memory.h"
+#include "kernel_objects.h"
 #include "queue.h"
 #include <strings.h>
 #include <stdint.h>

@@ -3,7 +3,7 @@
 #include <ARMCM3.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include "memory.h"
+#include "kernel_objects.h"
 static uint32_t isKernelRunning = false; 
 
 uint32_t osKernelSysTick(void){
