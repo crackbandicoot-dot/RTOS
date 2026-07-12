@@ -129,7 +129,7 @@ rtx2irq.o: $(RTX2_SVC_ASM)
 
 # Ctrl-A, then X to quit QEMU
 run: $(BINARY)
-	-$(QEMU_RUN_COMMAND)
+	-$(QEMU_RUN_COMMAND) 
 	echo $? " has exited"
 
 gdbserver: $(BINARY)

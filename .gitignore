@@ -1,7 +1,6 @@
 #Rigth now there are binaries on docs, maybe on the future
 #this can be updated to track some docs
 docs/
-CMSIS_5/
 #Exlude binary files from the repo
 
 *.elf
