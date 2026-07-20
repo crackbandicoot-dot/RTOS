@@ -1,5 +1,5 @@
 #include "uart.h"
-
+#include <math.h>
 #include <stdint.h>
 #include <stdio.h>
 
@@ -17,7 +17,22 @@ int __io_putchar(int ch)
   UARTDR(UART0_BASE) = ch;
   return ch;
 }
-
+void printNumber(uint32_t num)
+{
+ if(num==0){
+    __io_putchar('0');
+    return;
+ }
+ char stack[10];
+ uint32_t top=0;
+ while(num){
+    stack[top++] = num%10 + '0';
+    num = num/10;
+ }
+ while(top){
+    __io_putchar(stack[--top]);
+ }
+}
 void printString(const char* ptr)
 {
   while (*ptr != '\0') {
@@ -25,4 +40,5 @@ void printString(const char* ptr)
       ptr++;
   }
 }
+
 

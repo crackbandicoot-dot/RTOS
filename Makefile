@@ -35,41 +35,12 @@ LINKER_SCRIPT = gcc_arm.ld
 
 SRC_ASM = $(CMSIS)/Device/ARM/ARMCM3/Source/GCC/startup_ARMCM3.S
 
-SRC_C = $(CMSIS)/Device/ARM/ARMCM3/Source/system_ARMCM3.c \
-        src/start.c \
-        src/uart.c
+SRC_C = $(CMSIS)/Device/ARM/ARMCM3/Source/system_ARMCM3.c 
 
-## CMSIS RTX RTOS specific
-RTX_OS_CMSIS_SRC = $(wildcard $(CMSIS)/CMSIS/RTOS/RTX/SRC/*.c) \
-                   $(CMSIS)/CMSIS/RTOS/RTX/Templates/RTX_Conf_CM.c
+## Source files
+SRC = $(wildcard src/*.c) $(wildcard src/*/*.c)
+SRC_ASM = $(CMSIS)/Device/ARM/ARMCM3/Source/GCC/startup_ARMCM3.S
 
-RTX_SRC_ASM = $(CMSIS)/CMSIS/RTOS/RTX/SRC/GCC/HAL_CM3.S
-RTX_SVC_ASM = $(CMSIS)/CMSIS/RTOS/RTX/SRC/GCC/SVC_Table.S
-
-RTX_INCLUDE_FLAGS = \
-  -I$(CMSIS)/CMSIS/RTOS/RTX/SRC \
-  -I$(CMSIS)/CMSIS/RTOS/RTX/INC
-
-## CMSIS RTX2 RTOS specific
-RTX2_OS_CMSIS_SRC = \
-  $(wildcard $(CMSIS)/CMSIS/RTOS2/RTX/Source/*.c) \
-  $(wildcard $(CMSIS)/CMSIS/RTOS2/RTX/Config/*.c)
-
-RTX2_SVC_ASM = $(CMSIS)/CMSIS/RTOS2/RTX/Source/GCC/irq_cm3.S
-
-RTX2_INCLUDE_FLAGS = \
-  -I$(CMSIS)/CMSIS/RTOS2/RTX/Include \
-  -I$(CMSIS)/CMSIS/RTOS2/Include \
-  -I$(CMSIS)/CMSIS/RTOS2/RTX/Config
-
-## Exercise source files
-3_8_1_SRC = $(wildcard src/*.c)
-3_8_1_SRC_ASM = $(CMSIS)/Device/ARM/ARMCM3/Source/GCC/startup_ARMCM3.S
-3_8_2_SRC = $(wildcard chapt3_8/Ex2/*.c)
-3_8_2_RTX2_SRC = $(wildcard chapt3_8/Ex2_rtx2/main.c)
-
-3_9_1_SRC = $(wildcard chapt3_9/Ex1/*.c)
-3_9_2_SRC = $(wildcard chapt3_9/Ex2/*.c)
 
 INCLUDE_FLAGS = \
   -I$(CMSIS)/Device/ARM/ARMCM3/Include \
@@ -91,41 +62,15 @@ CFLAGS = \
   -Wl,--gc-sections \
   -DARMCM3 \
   -D__CORTEX_M3 \
-  -D__CMSIS_RTOS
+  -D__CMSIS_RTOS\
+  -O0
 
-all: 3_8_1
+all: $(SRC_C) $(SRC) boot.o
+	$(CC) $^ $(CFLAGS) -T $(LINKER_SCRIPT) -o $(BINARY)
+	$(OBJ) -D $(BINARY) > $@_$(BINARY_OBJDUMP)
 
 boot.o: $(SRC_ASM)
 	$(CC) $(CFLAGS) -c $^ -o $@
-
-rtxsvc.o: $(RTX_SVC_ASM)
-	$(CC) $(CFLAGS) -c $^ -o $@
-
-rtxboot.o: $(RTX_SRC_ASM)
-	$(CC) $(CFLAGS) -c $^ -o $@
-
-rtx2irq.o: $(RTX2_SVC_ASM)
-	$(CC) $(CFLAGS) -c $^ -o $@
-
-3_8_1_boot.o: $(3_8_1_SRC_ASM)
-	$(CC) $(CFLAGS) -c $^ -o $@
-
-
-3_8_1: $(SRC_C) $(3_8_1_SRC) 3_8_1_boot.o
-	$(CC) $^ $(CFLAGS) -T $(LINKER_SCRIPT) -o $(BINARY)
-	$(OBJ) -D $(BINARY) > $@_$(BINARY_OBJDUMP)
-
-3_8_2: $(SRC_C) $(RTX_OS_CMSIS_SRC) $(3_8_2_SRC) rtxsvc.o rtxboot.o boot.o
-	$(CC) $^ $(CFLAGS) $(RTX_INCLUDE_FLAGS) -T $(LINKER_SCRIPT) -o $(BINARY)
-	$(OBJ) -D $(BINARY) > $@_$(BINARY_OBJDUMP)
-
-3_9_1: $(SRC_C) $(3_9_1_SRC) boot.o
-	$(CC) $^ $(CFLAGS) -T $(LINKER_SCRIPT) -o $(BINARY)
-	$(OBJ) -D $(BINARY) > $@_$(BINARY_OBJDUMP)
-
-3_9_2: $(SRC_C) $(3_9_2_SRC) boot.o
-	$(CC) $^ $(CFLAGS) -T $(LINKER_SCRIPT) -o $(BINARY)
-	$(OBJ) -D $(BINARY) > $@_$(BINARY_OBJDUMP)
 
 # Ctrl-A, then X to quit QEMU
 run: $(BINARY)
@@ -143,3 +88,42 @@ gdb: $(BINARY)
 
 clean:
 	rm -f $(BINARY_OBJDUMP) *.o *.elf 
+
+
+# ---- Host test configuration ----
+HOST_CC     = gcc
+CORE_SRC    = $(wildcard src/core/*.c)
+TEST_DIR    = tests/unit
+TEST_SRC    = $(wildcard $(TEST_DIR)/*.c)
+#MOCK_SRC    = $(TEST_DIR)/mock_port.c    # your stubs
+
+core_tests:
+	@$(HOST_CC) -Isrc/core -I$(TEST_DIR) \
+	    $(CORE_SRC) $(TEST_SRC) -o test_runner
+	@./test_runner
+
+# ---- RTOS Validation Test Configuration ----
+RTOS_VALID_DIR  = tests/rtos_tests
+RTOS_VALID_SRC  = $(wildcard $(RTOS_VALID_DIR)/*.c) \
+                  $(wildcard $(RTOS_VALID_DIR)/Source/*.c)
+RTOS_VALID_INC  = -I$(RTOS_VALID_DIR) \
+                  -I$(RTOS_VALID_DIR)/Include \
+                  -I$(RTOS_VALID_DIR)/Config
+
+# Source files for your RTOS implementation (src/), but WITHOUT your application main().
+# Adjust the filter-out pattern to match your actual main file.
+RTOS_CORE_SRC   = $(filter-out src/main.c, $(SRC))
+
+# Extra defines often required by the validation pack.
+# Check the pack’s readme – common ones are shown below.
+RTOS_VALID_DEFS = -DRTE_Components_H -D__RTX -DUSE_RTX
+
+RTOS_TEST_ELF = rtos_validation.elf
+
+rtos_validation.elf: $(SRC_C) $(RTOS_CORE_SRC) $(RTOS_VALID_SRC) boot.o
+	$(CC) $^ $(CFLAGS) $(RTOS_VALID_INC) $(RTOS_VALID_DEFS) \
+	      -T $(LINKER_SCRIPT) -o $@
+	$(OBJ) -D $@ > rtos_validation_objdump.txt
+  
+run-rtos-tests: rtos_validation.elf
+	-$(QEMU_RUN_COMMAND) -device loader,file=$<

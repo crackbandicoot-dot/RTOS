@@ -3,6 +3,7 @@
     "configurations": [
         {
             "showDisplayString": true,
+            "globals":true,
             "registers": true,
             "name": "Cortex-M3 QEMU Debug",
             "type": "cppdbg",

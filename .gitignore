@@ -1,6 +1,7 @@
 #Rigth now there are binaries on docs, maybe on the future
 #this can be updated to track some docs
 docs/
+tests/rtos_tests/Documents
 #Exlude binary files from the repo
 
 *.elf
@@ -14,3 +15,4 @@ DEBUGCONGIG.txt
 README.md
 qemu_exceptions.log
 rams.pdf
+all_objdump.txt

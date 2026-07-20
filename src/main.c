@@ -1,9 +1,10 @@
-#include "start.h"
-#include "queue.h"
-/* #include <ARMCM3.h> */
-#include "cmsis_os.h"
+#include "target/start.h"
+#include "target/cmsis_os.h"
+#include "core/queue.h"
+#include "core/kernel_objects.h"
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdio.h>
 
 /* 
 void configureMPU(void)
@@ -43,28 +44,39 @@ void ref_main(){
   //accessRegionsMPU();
   
 } */
+void printA()
+{
+  while(1){
+    printString("A\n");
+  }
+}
+void printB()
+{
+  uint32_t counter=0;
+  while(1){
+  printString("EVEN\n");
+  }
+}
+void printC()
+{
+  uint32_t counter=0;
+  while(1){
+  printString("ODD\n");
+  }
+}
 
 int main(void)
 {
-  /*osKernelInitialize();
+  osKernelInitialize();
+  
+  osThreadDef(printA,0,1,0);
+  osThreadDef(printB,0,1,0);
+  osThreadDef(printC,0,1,0);
+  osThreadId thread_a= osThreadCreate(&os_thread_def_printA,NULL);
+  osThreadId thread_b = osThreadCreate(&os_thread_def_printB,NULL);
+  osThreadId thread_c = osThreadCreate(&os_thread_def_printC,NULL);
+
   osKernelStart();
-  printString("Hello world");*/
-  Queue Q;
-  uint32_t length =8;
-  uint32_t A[length];
-  initialize_queue(&Q,A,length);
-  for (size_t i = 0; i < 8; i++)
-  {
-    enqeue(&Q,i+1);  
-  }
-  for (size_t i = 0; i < 8; i++)
-  {
-    uint32_t x= deqeue(&Q);
-  }
-  enqeue(&Q,15);
-  enqeue(&Q,16);
-  uint32_t y = deqeue(&Q);
-  uint32_t z = deqeue(&Q);
-  printString("Hello world !!!! \n");
+  while(1){}
   return 0;
 }
