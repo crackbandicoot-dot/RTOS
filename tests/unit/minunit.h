@@ -1,7 +1,7 @@
 #ifndef MINUNIT_H
 #define MINUNIT_H
 #include <stdio.h>
-
+#include <stdint.h>
 static int tests_run = 0;         // number of assertions
 static int tests_failed = 0;      // assertions that failed
 static int test_cases_run = 0;    // number of test functions executed
@@ -16,6 +16,7 @@ static int test_cases_run = 0;    // number of test functions executed
             return 1;                                                 \
         }                                                             \
     } while (0)
+
 
 
 #define mu_run_test(test) do { \
@@ -34,6 +35,31 @@ static int test_cases_run = 0;    // number of test functions executed
     } else { \
         printf("  SOME TESTS FAILED\n"); \
     } \
+} while (0)
+
+
+
+typedef void (*PermutationChecker)(uint32_t* permutation,uint32_t length,void* context);
+void test_permutations(uint32_t visited, uint32_t idx,uint32_t length,uint32_t* permutation, PermutationChecker check,void* context)
+{
+    if(idx==length){
+        check(permutation,length,context);
+        return;
+    }
+    for(uint32_t i=0;i<length;i++){
+        //If it has'nt been visited
+        if((visited&(1<<i))==0)
+        {
+            permutation[idx]=i+1;
+            //Mark as visited
+            test_permutations(visited|(1<<i),idx+1,length,permutation,check,context);    
+        }
+    }
+
+} 
+#define mu_assert_permutations(length,check,context) do { \
+    uint32_t permutation[length] ; \
+    test_permutations(0,0,length,permutation,check,context);\
 } while (0)
 
 #endif

@@ -10,7 +10,7 @@
 static int test_queue(void) {
 
     uint32_t length = 10;
-    uint32_t arr[length];
+    uint32_t arr[10];
     Queue queue;
     initialize_queue(&queue,arr,length);
     mu_assert(queue.count==0, "Queue initialized with count different than  0");

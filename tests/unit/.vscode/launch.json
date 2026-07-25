@@ -1,0 +1,31 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Core Tests",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/../../test_runner",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/../../",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Ignore glibc stdio functions when stepping",
+                    "text": "-exec skip -gfi */stdio-common/*",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "Build Core Tests",
+            "miDebuggerPath": "/usr/bin/gdb"
+        }
+    ]
+}
