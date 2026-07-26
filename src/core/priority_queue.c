@@ -55,6 +55,9 @@ void pq_enqueue(PriorityQueue* pq, uint32_t value, int32_t priority)
 uint32_t pq_dequeue(PriorityQueue* pq)
 {
     uint32_t result = pq->items[0].value;
+    PriorityQueueItem* removedNode = pq->items+(--pq->count);
+    pq->items[0] = *removedNode;
+    removedNode->priority = INT32_MAX;
     //Find the path where the second min will live, and always go to the smallest child
     uint32_t current=0;
     int32_t minPriority,rightPriority;
@@ -62,7 +65,6 @@ uint32_t pq_dequeue(PriorityQueue* pq)
     while(1)
     {
         minPriority = rightPriority = INT32_MAX;
-        pq->items[parent((int32_t)current)] = pq->items[current];
         
         minIndex = left(current);
         if( minIndex < pq->count) minPriority = pq->items[minIndex].priority;
@@ -75,12 +77,11 @@ uint32_t pq_dequeue(PriorityQueue* pq)
             minIndex = rightIndex;
             minPriority = rightPriority;
         }
-        if(minIndex>=pq->count) break;
+        if( minIndex>=pq->count || pq->items[current].priority < minPriority)
+            break;
+        
+        SWAP(pq->items[current],pq->items[minIndex]);
         current = minIndex;   
     }
-    PriorityQueueItem* removedNode = pq->items+(--pq->count);
-    pq->items[current] = *removedNode;
-    removedNode->priority = INT32_MAX;
-    pq_fix_heap_invariant(pq,parent(current));
     return result;
 }
