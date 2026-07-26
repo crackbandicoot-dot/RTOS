@@ -24,10 +24,10 @@ void pq_fix_heap_invariant(PriorityQueue* pq,uint32_t currentIndex)
     {
         minPriority = rightPriority = INT32_MAX;
 
-        minIndex = left(currentIndex);
+        minIndex = pq_left(currentIndex);
         if(minIndex < pq->count) minPriority = pq->items[minIndex].priority;
 
-        rightIndex =right(currentIndex);
+        rightIndex =pq_right(currentIndex);
         if(rightIndex < pq->count) rightPriority = pq->items[rightIndex].priority;
         
         if(rightPriority<minPriority)
@@ -40,7 +40,7 @@ void pq_fix_heap_invariant(PriorityQueue* pq,uint32_t currentIndex)
         SWAP(pq->items[currentIndex],pq->items[minIndex]);
         //If currentIndex was 0, it will be 0 again, and because heap invariant was fixed, it
         //will return successfully
-        currentIndex = parent(currentIndex);
+        currentIndex = pq_parent(currentIndex);
     }
     while(1);
 }
@@ -50,7 +50,7 @@ void pq_enqueue(PriorityQueue* pq, uint32_t value, int32_t priority)
    PriorityQueueItem* item = pq->items+currentIndex;
    item->priority = priority;
    item->value = value;
-   pq_fix_heap_invariant(pq,parent(currentIndex));
+   pq_fix_heap_invariant(pq,pq_parent(currentIndex));
 }
 uint32_t pq_dequeue(PriorityQueue* pq)
 {
@@ -66,10 +66,10 @@ uint32_t pq_dequeue(PriorityQueue* pq)
     {
         minPriority = rightPriority = INT32_MAX;
         
-        minIndex = left(current);
+        minIndex = pq_left(current);
         if( minIndex < pq->count) minPriority = pq->items[minIndex].priority;
     
-        rightIndex = right(current);
+        rightIndex = pq_right(current);
         if(rightIndex < pq->count) rightPriority = pq->items[rightIndex].priority;
         
         if(minPriority>rightPriority)
