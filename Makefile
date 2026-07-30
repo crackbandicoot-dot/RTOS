@@ -88,13 +88,13 @@ clean:
 HOST_CC     ?= gcc
 HOST_CFLAGS ?= -g3 -O0 -Wall -Wextra -Isrc/core -I$(TEST_DIR)
 
-CORE_SRC    = $(wildcard src/core/*.c)
+CORE_SRC    = $(wildcard src/core/*.c) -lm 
 TEST_DIR    = tests/unit
 TEST_SRC    = $(wildcard $(TEST_DIR)/*.c)
 #MOCK_SRC   = $(TEST_DIR)/mock_port.c    # your stubs
 
 # Compiles host unit test binary with debug symbols
-test_runner: $(CORE_SRC) $(TEST_SRC)
+test_runner: $(CORE_SRC) $(TEST_SRC)   
 	$(HOST_CC) $(HOST_CFLAGS) $^ -o $@
 
 # Runs test binary directly in terminal

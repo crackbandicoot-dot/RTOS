@@ -43,8 +43,9 @@ void check(uint32_t* permutation,uint32_t length,void* context)
 // Test cases
 static int test_priority_queue(void) {
     PriorityQueueItem arr[PRIORITY_QUEUE_LENGTH];
+    uint32_t valueToIndex[PRIORITY_QUEUE_LENGTH];
     PriorityQueue pq;
-    pq_initialize(&pq,arr,PRIORITY_QUEUE_LENGTH);
+    pq_initialize(&pq,arr,&valueToIndex,PRIORITY_QUEUE_LENGTH);
     mu_assert_permutations(PRIORITY_QUEUE_LENGTH,check,&pq);
     return 0; 
 }
